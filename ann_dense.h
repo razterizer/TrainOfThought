@@ -263,6 +263,14 @@ namespace ml
           ret[n_idx] = neurons[n_idx]->output();
         return ret;
       }
+      
+      const std::vector<float> result() const
+      {
+        std::vector<float> ret(No);
+        for (size_t n_idx = 0; n_idx < No; ++n_idx)
+          ret[n_idx] = *neurons[n_idx]->output();
+        return ret;
+      }
     
       const Neuron* operator[](size_t n_idx) const
       {
@@ -273,7 +281,7 @@ namespace ml
       size_t num_inputs() const { return Ni; }
       size_t num_outputs() const { return No; }
     
-      void print_output() const
+      void print_result() const
       {
         std::cout << "[ ";
         std::cout << *neurons.front()->output();
@@ -371,6 +379,11 @@ namespace ml
       {
         return layers.back()->output();
       }
+      
+      const std::vector<float> result() const
+      {
+        return layers.back()->result();
+      }
     
       const NeuralLayer* operator[](size_t l_idx) const
       {
@@ -381,9 +394,9 @@ namespace ml
       size_t num_inputs() const { return layers.front()->num_inputs(); }
       size_t num_outputs() const { return layers.back()->num_outputs(); }
     
-      void print_output() const
+      void print_result() const
       {
-        layers.back()->print_output();
+        layers.back()->print_result();
       }
     
       void print() const
