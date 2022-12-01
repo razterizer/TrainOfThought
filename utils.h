@@ -115,6 +115,32 @@ namespace ml
       return ret;
     }
   
+    template<typename Cont>
+    size_t argmax(const Cont& c) { return stlutils::max_element_idx(c); }
+  
+    template<typename Cont>
+    size_t argmin(const Cont& c) { return stlutils::min_element_idx(c); }
+  
+    template<typename Cont>
+    Cont hardmax(const Cont& c)
+    {
+      Cont ret = c;
+      std::fill(ret.begin(), ret.end(), 0);
+      auto max_idx = argmax(c);
+      ret[max_idx] = 1;
+      return ret;
+    }
+  
+    template<typename Cont>
+    Cont hardmin(const Cont& c)
+    {
+      Cont ret = c;
+      std::fill(ret.begin(), ret.end(), 0);
+      auto min_idx = argmin(c);
+      ret[min_idx] = 1;
+      return ret;
+    }
+  
     class Input
     {
       float perceptron_signal = 0.f;
