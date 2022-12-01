@@ -1,16 +1,12 @@
 //
-//  MachineLearning.h
+//  ann_dense.h
 //  Core Lib
 //
-//  Created by Rasmus Anthin on 2022-11-28.
+//  Created by Rasmus Anthin on 2022-12-01.
 //
 
 #pragma once
-#include "../StlUtils.h"
-#include "../Rand.h"
-#include "../StringHelper.h"
-#include <optional>
-#include <memory>
+#include "utils.h"
 
 
 namespace ml
@@ -19,126 +15,6 @@ namespace ml
   namespace ann
   {
   
-    enum class PhiType
-    {
-      BinaryStep,
-      Heaviside_BinaryStep,
-      Linear,
-      Sigmoid,
-      Tanh,
-      ReLU,
-      Parametric_ReLU,
-      Leaky_ReLU,
-      Parametric_Leaky_ReLU,
-      ELU,
-      Swish,
-      GELU,
-      SELU,
-    };
-  
-    float phi(float z, PhiType type, float a = 1.f, float k = 1.f, float l = 1.1f)
-    {
-      switch (type)
-      {
-        case PhiType::BinaryStep: return z < 0 ? 0 : 1;
-        case PhiType::Heaviside_BinaryStep: return z <= 0 ? 0 : 1;
-        case PhiType::Linear: return z;
-        case PhiType::Sigmoid: return 1./(1 + std::exp(-z));
-        case PhiType::Tanh: return std::tanh(z);
-        case PhiType::ReLU: return std::max(0.f, z);
-        case PhiType::Parametric_ReLU: return std::max(0.f, k*z + l);
-        case PhiType::Leaky_ReLU: return std::max(0.1f*z, z);
-        case PhiType::Parametric_Leaky_ReLU: return std::max(a*(k*z + l), k*z + l);
-        case PhiType::ELU: return z < 0 ? a*(std::exp(z) - 1) : z;
-        case PhiType::Swish: return z*phi(z, PhiType::Sigmoid);
-        //case PhiType::GELU: return 0.5*z*(1 + std::tanh(M_2_SQRTPI*M_SQRT1_2*(z + 0.044715*math::cube(z))));
-        case PhiType::GELU: return 0.5*z*(1 + std::erf(z/M_SQRT2));
-        case PhiType::SELU: return l*phi(z, PhiType::ELU, a, k, l);
-      }
-    }
-  
-    float phi_diff(float z, PhiType type, float a = 1.f, float k = 1.f, float l = 1.1f)
-    {
-      switch (type)
-      {
-        case PhiType::BinaryStep: return 0.f; // Actually inf at 0- and 0 everywhere else.
-        case PhiType::Heaviside_BinaryStep: return 0.f; // Actually inf at 0+ and 0 everywhere else.
-        case PhiType::Linear: return 1.f;
-        case PhiType::Sigmoid:
-        {
-          auto s = phi(z, type, a, k, l);
-          return s * (1 - s);
-        }
-        case PhiType::Tanh:
-        {
-          auto th = phi(z, type, a, k, l);
-          return 1 - math::sq(th);
-        }
-        case PhiType::ReLU: return z < 0 ? 0 : 1;
-        case PhiType::Parametric_ReLU: return z < -l/k ? 0 : k;
-        case PhiType::Leaky_ReLU: return z < 0 ? 0.1 : 1;
-        case PhiType::Parametric_Leaky_ReLU: return z < -l/k ? a*k : k;
-        case PhiType::ELU: return z < 0 ? phi(z, type, a, k, l) + a : 1;
-        case PhiType::Swish:
-        {
-          auto sw = phi(z, type, a, k, l);
-          auto sig = phi(z, PhiType::Sigmoid, a, k, l);
-          return sw + sig * (1 - sw);
-        }
-        case PhiType::GELU:
-        {
-          //auto z3 = math::cube(z);
-          //auto sech = [](float v) { return std::sqrt(1 - math::sq(std::tanh(v))); };
-          //auto b = 0.797885f*z + 0.0356774f*z3;
-          //return 0.5f + (0.398942f*z + 0.0535161f*z3)*math::sq(sech(b)) + 0.5f*std::tanh(b);
-          
-          // 1/2*(erf(z/sqrt(2)) + 1) + exp(-z^2/2)*z/(sqrt(2*pi))
-          static const auto c_1_sqrt_2pi = M_2_SQRTPI/M_SQRT2;
-          return 0.5f*(1 + std::erf(z/M_SQRT2)) + (std::exp(-math::sq(z)*0.5f)*z)*c_1_sqrt_2pi;
-        }
-        case PhiType::SELU: return l*phi_diff(z, PhiType::ELU, a, k, l);
-      }
-    }
-  
-    template<typename Cont>
-    Cont softmax(const Cont& c, float p = 1)
-    {
-      Cont ret = c;
-      Cont ec = c;
-      if (p == 1)
-        for (auto& v : ec)
-          v = std::exp(v);
-      else
-        for (auto& v : ec)
-          v = std::exp(std::pow(v, p));
-      auto ecs = stlutils::sum(ec);
-      auto N = c.size();
-      for (size_t i = 0; i < N; ++i)
-        ret[i] = ec[i]/ecs;
-      return ret;
-    }
-  
-    class Input
-    {
-      float perceptron_signal = 0.f;
-      const float* dendrite_output = nullptr;
-      bool set = false;
-      
-    public:
-      Input() = default;
-      Input(const float signal) : perceptron_signal(signal), set(true) {}
-      Input(const float* output) : dendrite_output(output), set(true) {}
-      
-      std::optional<float> get() const
-      {
-        if (!set)
-          return {};
-        if (dendrite_output != nullptr)
-          return *dendrite_output;
-        return perceptron_signal;
-      }
-    };
-    
     class Neuron
     {
       const size_t Nw = 0;
@@ -213,18 +89,18 @@ namespace ml
         auto dC_dz = dC_df * df_dz;
         auto dC_dw = stlutils::mult_scalar(dz_dw, dC_dz);
         auto dC_db = dC_dz * dz_db;
-        
+      
         auto w_diff = stlutils::mult_scalar(dC_dw, -eta);
         w_diff = stlutils::add(w_diff, stlutils::mult_scalar(w_diff_prev, mu));
         w_diff = stlutils::add_scalar(w_diff, r);
         auto b_diff = eta * (-dC_db + mu * b_diff_prev + r);
-        
+      
         weights = stlutils::add(weights, w_diff);
         bias += b_diff;
-        
+      
         w_diff_prev = w_diff;
         b_diff_prev = b_diff;
-        
+      
         return dC_dw;
       }
       
@@ -240,9 +116,9 @@ namespace ml
         update_forward();
         return update_backward(y_trg, eta, mu, r);
       }
-      
+    
       const float* output() const { return &y; }
-      
+    
       void print() const
       {
         // x0 = 1.4241414 | w0 = -0.233455  \
@@ -250,9 +126,9 @@ namespace ml
         // x2 = 0.2       | w2 = -1.14      |---->[z = -0.1203]---->(Leaky_ReLU)---->[y = -0.01203]
         // x3 = 2.47      | w3 = 0.13444    |
         //                  b = 1.1455      /
-        
+      
         const auto nan = std::numeric_limits<float>::quiet_NaN();
-        
+      
         std::vector<std::string> wb_col(Nw + 1), x_col(Nw);
         for (size_t w_idx = 0; w_idx < Nw; ++w_idx)
         {
@@ -305,22 +181,22 @@ namespace ml
           }
         }
         table[Nw] = str::rep_char(' ', static_cast<int>(x_col_width)) + " | " + wb_col[Nw] + " /";
-        
+    
         std::cout << str::rep_char('-', static_cast<int>(table[0].size()) - 1) << '\n';
         for (const auto& str : table)
           std::cout << str << '\n';
         std::cout << str::rep_char('-', static_cast<int>(table[0].size()) - 1) << '\n';
       }
     };
-  
+
     //
-  
+
     class NeuralLayer
     {
       const size_t Ni = 0;
       const size_t No = 0;
       std::vector<std::unique_ptr<Neuron>> neurons;
-      
+    
     public:
       NeuralLayer(const std::vector<std::vector<float>>& w,
                   const std::vector<float>& b,
@@ -330,25 +206,25 @@ namespace ml
         for (size_t n_idx = 0; n_idx < No; ++n_idx)
           neurons.emplace_back(std::make_unique<Neuron>(w[n_idx], b[n_idx], af_type));
       }
-      
+    
       void set_inputs(const std::vector<Input>& x)
       {
         for (auto& n : neurons)
           n->set_inputs(x);
       }
-      
+    
       void set_phi_params(float a, float k, float l)
       {
         for (auto& n : neurons)
           n->set_phi_params(a, k, l);
       }
-      
+    
       void update_forward()
       {
         for (auto& n : neurons)
           n->update_forward();
       }
-      
+    
       // Back-prop
       // y_trg : target output.
       // eta : learning rate (0.1).
@@ -365,7 +241,7 @@ namespace ml
           grad[n_idx] = neurons[n_idx]->update_backward(y_trg[n_idx], eta, mu, r);
         return grad;
       }
-      
+    
       // Forward-prop followed by a back-prop.
       // y_trg : target output.
       // eta : learning rate (0.1).
@@ -379,7 +255,7 @@ namespace ml
         update_forward();
         return update_backward(y_trg, eta, mu, r);
       }
-      
+    
       const std::vector<Input> output() const
       {
         std::vector<Input> ret(No);
@@ -387,16 +263,16 @@ namespace ml
           ret[n_idx] = neurons[n_idx]->output();
         return ret;
       }
-      
+    
       const Neuron* operator[](size_t n_idx) const
       {
         assert(n_idx < No);
         return neurons[n_idx].get();
       }
-      
+    
       size_t num_inputs() const { return Ni; }
       size_t num_outputs() const { return No; }
-      
+    
       void print_output() const
       {
         std::cout << "[ ";
@@ -405,16 +281,16 @@ namespace ml
           std::cout << ", " << *neurons[n_idx]->output();
         std::cout << " ]\n";
       }
-      
+    
       void print() const
       {
         for (const auto& n : neurons)
           n->print();
       }
     };
-  
+
     //
-  
+
     class NeuralNetwork
     {
       const size_t Nl = 0;
@@ -436,19 +312,19 @@ namespace ml
       {
         layers.front()->set_inputs(x);
       }
-      
+    
       void set_phi_params(float a, float k, float l)
       {
         for (auto& ll : layers)
           ll->set_phi_params(a, k, l);
       }
-      
+    
       void update_forward()
       {
         for (auto& l : layers)
           l->update_forward();
       }
-      
+    
       // Back-prop
       // y_trg : target output.
       // eta : learning rate (0.1).
@@ -476,7 +352,7 @@ namespace ml
         }
         return grad;
       }
-      
+    
       // Forward-prop followed by a back-prop.
       // y_trg : target output.
       // eta : learning rate (0.1).
@@ -490,29 +366,29 @@ namespace ml
         update_forward();
         return update_backward(y_trg, eta, mu, r);
       }
-      
+    
       const std::vector<Input> output() const
       {
         return layers.back()->output();
       }
-      
+    
       const NeuralLayer* operator[](size_t l_idx) const
       {
         assert(l_idx < Nl);
         return layers[l_idx].get();
       }
-      
+    
       size_t num_inputs() const { return layers.front()->num_inputs(); }
       size_t num_outputs() const { return layers.back()->num_outputs(); }
-      
+    
       void print_output() const
       {
         layers.back()->print_output();
       }
-      
+    
       void print() const
       {
-        
+    
         for (size_t l_idx = 0; l_idx < Nl; ++l_idx)
         {
           const auto& l = layers[l_idx];
@@ -521,43 +397,6 @@ namespace ml
         }
       }
     };
-  
-    //
-  
-    enum class GenWeightsType { Zero, MinusOne, One, Two, Rnd_0_p1, Rndn_0_p1, Rnd_m1_p1, Rndn_m1_p1 };
-    float gen_w(GenWeightsType type)
-    {
-      switch (type)
-      {
-        case GenWeightsType::Zero: return 0;
-        case GenWeightsType::MinusOne: return -1;
-        case GenWeightsType::One: return 1;
-        case GenWeightsType::Two: return 2;
-        case GenWeightsType::Rnd_0_p1: return rnd::rand_float(0, 1);
-        case GenWeightsType::Rndn_0_p1: return rnd::randn_clamp(0.5, 1, 0, 1);
-        case GenWeightsType::Rnd_m1_p1: return rnd::rand_float(-1, 1);
-        case GenWeightsType::Rndn_m1_p1: return rnd::randn_clamp(0, 2, -1, 1);
-      }
-    }
-  
-    std::vector<std::vector<float>> generate_weights(GenWeightsType type, size_t Ni, size_t No)
-    {
-      std::vector<std::vector<float>> w(No);
-      for (auto& w_o : w)
-      {
-        for (size_t i_idx = 0; i_idx < Ni; ++i_idx)
-          w_o.emplace_back(gen_w(type));
-      }
-      return w;
-    }
-  
-    std::vector<float> generate_biases(GenWeightsType type, size_t No)
-    {
-      std::vector<float> b(No);
-      for (auto& b_o : b)
-        b_o = gen_w(type);
-      return b;
-    }
   
   }
 
