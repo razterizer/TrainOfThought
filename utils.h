@@ -100,17 +100,14 @@ namespace ml
       }
     }
   
+    // softmax() behaves like softmax when w > 0 and softmin when w < 0.
     template<typename Cont>
-    Cont softmax(const Cont& c, float p = 1)
+    Cont softmax(const Cont& c, float w = 1)
     {
       Cont ret = c;
       Cont ec = c;
-      if (p == 1)
-        for (auto& v : ec)
-          v = std::exp(v);
-      else
-        for (auto& v : ec)
-          v = std::exp(std::pow(v, p));
+      for (auto& v : ec)
+        v = std::exp(w * v);
       auto ecs = stlutils::sum(ec);
       auto N = c.size();
       for (size_t i = 0; i < N; ++i)
