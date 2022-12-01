@@ -115,6 +115,10 @@ namespace ml
       return ret;
     }
   
+    // softmin() behaves like softmin when w > 0 and softmax when w < 0.
+    template<typename Cont>
+    Cont softmin(const Cont& c, float w = 1) { return softmax(c, -w); }
+  
     template<typename Cont>
     size_t argmax(const Cont& c) { return stlutils::max_element_idx(c); }
   
