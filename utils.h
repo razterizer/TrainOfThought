@@ -120,53 +120,11 @@ namespace ml
     Cont softmin(const Cont& c, float w = 1) { return softmax(c, -w); }
   
     template<typename Cont>
-    std::vector<size_t> argmax(const Cont& c)
-    {
-      // If all values are the same, then there is no maximum.
-      if (std::all_of(c.begin(), c.end(), [&c](const auto v) { return v == c.back(); }))
-        return {};
-      
-      std::vector<size_t> indices;
-      typename Cont::value_type curr_max = math::get_min<typename Cont::value_type>();
-      auto N = c.size();
-      for (size_t e_idx = 0; e_idx < N; ++e_idx)
-      {
-        if (math::maximize(curr_max, c[e_idx]))
-          indices.clear();
-        
-        if (c[e_idx] == curr_max)
-          indices.push_back(e_idx);
-      }
-      return indices;
-    }
-  
-    template<typename Cont>
-    std::vector<size_t> argmin(const Cont& c)
-    {
-      // If all values are the same, then there is no minimum.
-      if (std::all_of(c.begin(), c.end(), [&c](const auto v) { return v == c.back(); }))
-        return {};
-      
-      std::vector<size_t> indices;
-      typename Cont::value_type curr_min = math::get_max<typename Cont::value_type>();
-      auto N = c.size();
-      for (size_t e_idx = 0; e_idx < N; ++e_idx)
-      {
-        if (math::minimize(curr_min, c[e_idx]))
-          indices.clear();
-        
-        if (c[e_idx] == curr_min)
-          indices.push_back(e_idx);
-      }
-      return indices;
-    }
-  
-    template<typename Cont>
     Cont hardmax(const Cont& c)
     {
       Cont ret = c;
       std::fill(ret.begin(), ret.end(), 0);
-      for (auto idx : argmax(c))
+      for (auto idx : stlutils::argmax(c))
         ret[idx] = 1;
       return ret;
     }
@@ -176,7 +134,7 @@ namespace ml
     {
       Cont ret = c;
       std::fill(ret.begin(), ret.end(), 0);
-      for (auto idx : argmin(c))
+      for (auto idx : stlutils::argmin(c))
         ret[idx] = 1;
       return ret;
     }
