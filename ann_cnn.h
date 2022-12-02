@@ -66,6 +66,51 @@ namespace ml
       return ret;
     }
   
+    enum class ConvType { Full, Same, Valid };
+    std::vector<float> conv_1d(const std::vector<float>& x,
+                               const std::vector<float>& w_kernel, float bias = 0.f,
+                               ConvType type = ConvType::Full)
+    {
+      auto Ni = static_cast<int>(x.size());
+      auto Nk = static_cast<int>(w_kernel.size());
+      int No = 0;
+      int pad_L = 0;
+      int pad_R = 0;
+      switch (type)
+      {
+        case ConvType::Full:
+          No = Ni + Nk - 1;
+          pad_L = Nk - 1;
+          pad_R = pad_L;
+          break;
+        case ConvType::Same:
+          No = Ni;
+          if (Nk % 2 == 1)
+          {
+            pad_L = std::max(0, Nk/2);
+            pad_R = pad_L;
+          }
+          else
+          {
+            pad_L = std::max(0, Nk/2 - 1);
+            pad_R = pad_L + 1;
+          }
+          break;
+        case ConvType::Valid:
+          No = std::max(0, Ni - Nk + 1);
+          break;
+      }
+      auto pad_vec_L = stlutils::repval<float>(0, pad_L);
+      auto pad_vec_R = stlutils::repval<float>(0, pad_R);
+      auto xx = stlutils::cat(pad_vec_L, x, pad_vec_R);
+      auto kk = w_kernel;
+      std::reverse(kk.begin(), kk.end());
+      std::vector<float> y(No);
+      for (int o_idx = 0; o_idx < No; ++o_idx)
+        y[o_idx] = stlutils::dot(stlutils::subset(xx, o_idx, o_idx + Nk - 1), kk) + bias;
+      return y;
+    }
+  
   }
 
 }
