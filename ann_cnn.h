@@ -285,6 +285,19 @@ namespace ml
           ret[r_idx*Nc + c_idx] = x[r_idx][c_idx];
       return ret;
     }
+  
+    std::vector<Input> flatten_3d_to_1d_input(const std::vector<std::vector<std::vector<float>>>& x)
+    {
+      auto Nl = x.size(); // layers
+      auto Nr = x.back().size(); // rows
+      auto Nc = x.back().back().size(); // columns
+      std::vector<Input> ret(Nl * Nr * Nc);
+      for (size_t l_idx = 0; l_idx < Nl; ++l_idx)
+        for (size_t r_idx = 0; r_idx < Nr; ++r_idx)
+          for (size_t c_idx = 0; c_idx < Nc; ++c_idx)
+            ret[l_idx*Nr*Nc + r_idx*Nc + c_idx] = x[l_idx][r_idx][c_idx];
+      return ret;
+    }
   }
 
 }
