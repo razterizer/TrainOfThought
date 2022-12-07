@@ -32,7 +32,7 @@ namespace ml
       return ret;
     }
   
-    enum class PoolingType { Min, Mean, Max };
+    enum class PoolingType { Min, Mean, Max, Sum };
   
     // #FIXME: Also treat 'valid' and 'same' ranges and perhaps remove use_padding altogether if 'same' covers this case, else add also 'pad' mode.
     std::vector<float> pooling_1d(const std::vector<float>& x, PoolingType type, int filter_size, int stride, bool use_padding = false)
@@ -56,6 +56,7 @@ namespace ml
         {
           case PoolingType::Min: cell = math::get_max<float>(); break;
           case PoolingType::Max: cell = math::get_min<float>(); break;
+          case PoolingType::Sum:
           case PoolingType::Mean: cell = 0; break;
         }
         for (size_t f_idx = 0; f_idx < filter_size; ++f_idx)
@@ -65,6 +66,7 @@ namespace ml
           {
             case PoolingType::Min: math::minimize(cell, xx[i_idx]); break;
             case PoolingType::Max: math::maximize(cell, xx[i_idx]); break;
+            case PoolingType::Sum:
             case PoolingType::Mean: cell += xx[i_idx]; break;
           }
         }
@@ -110,6 +112,7 @@ namespace ml
           {
             case PoolingType::Min: cell = math::get_max<float>(); break;
             case PoolingType::Max: cell = math::get_min<float>(); break;
+            case PoolingType::Sum:
             case PoolingType::Mean: cell = 0; break;
           }
           for (size_t fr_idx = 0; fr_idx < filter_size[0]; ++fr_idx)
@@ -122,6 +125,7 @@ namespace ml
               {
                 case PoolingType::Min: math::minimize(cell, xx[ir_idx][ic_idx]); break;
                 case PoolingType::Max: math::maximize(cell, xx[ir_idx][ic_idx]); break;
+                case PoolingType::Sum:
                 case PoolingType::Mean: cell += xx[ir_idx][ic_idx]; break;
               }
             }
