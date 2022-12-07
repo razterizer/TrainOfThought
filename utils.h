@@ -26,6 +26,7 @@ namespace ml
       Linear,
       Sigmoid,
       Tanh,
+      Parametric_Tanh,
       ReLU,
       Parametric_ReLU,
       Leaky_ReLU,
@@ -45,6 +46,7 @@ namespace ml
         case PhiType::Linear: return z;
         case PhiType::Sigmoid: return 1./(1 + std::exp(-z));
         case PhiType::Tanh: return std::tanh(z);
+        case PhiType::Parametric_Tanh: return a*std::tanh(k*z);
         case PhiType::ReLU: return std::max(0.f, z);
         case PhiType::Parametric_ReLU: return std::max(0.f, k*z + l);
         case PhiType::Leaky_ReLU: return std::max(0.1f*z, z);
@@ -74,6 +76,7 @@ namespace ml
           auto th = phi(z, type, a, k, l);
           return 1 - math::sq(th);
         }
+        case PhiType::Parametric_Tanh: return a*k/math::sq(std::cosh(k*z));
         case PhiType::ReLU: return z < 0 ? 0 : 1;
         case PhiType::Parametric_ReLU: return z < -l/k ? 0 : k;
         case PhiType::Leaky_ReLU: return z < 0 ? 0.1 : 1;

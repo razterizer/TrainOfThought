@@ -167,6 +167,7 @@ namespace ml
               case PhiType::Linear: table[w_idx] += "Linear"; break;
               case PhiType::Sigmoid: table[w_idx] += "Sigmoid"; break;
               case PhiType::Tanh: table[w_idx] += "Tanh"; break;
+              case PhiType::Parametric_Tanh: table[w_idx] += "Parametric_Tanh"; break;
               case PhiType::ReLU: table[w_idx] += "ReLU"; break;
               case PhiType::Parametric_ReLU: table[w_idx] += "Parametric_ReLU"; break;
               case PhiType::Leaky_ReLU: table[w_idx] += "Leaky_ReLU"; break;
