@@ -15,6 +15,8 @@ namespace ml
   namespace ann
   {
   
+    enum class BackPropType { Output, Hidden };
+  
     class Neuron
     {
       const size_t Nw = 0;
@@ -70,23 +72,27 @@ namespace ml
       }
       
       // Back-prop
-      // y_trg : target output.
+      // type : output or hidden. If output, then y_trg is the target output,
+      //        if hidden, then it is the combined gradient from the next layer.
+      // y_trg_or_grad : target output or combined gradient from behind the next layer.
       // eta : learning rate (0.1).
       // mu : momentum term (0.05).
       // r : random term for simulated annealing-ish behaviour (0).
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
-      std::vector<float> update_backward(float y_trg, float eta = 0.1f, float mu = 0.05f, float r = 0.f)
+      std::vector<float> update_backward(BackPropType type, float trg_or_grad,
+                                         float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
-        // dC/dw1 = dC/df * df/dz * dz/dw
-        auto err_diff = -(y_trg - y);
-        auto dC_df = err_diff;
-        auto df_dz = phi_diff(z, phi_type, phi_param_a, phi_param_k, phi_param_l);
+        // dC/dw1 = dC/dy * dy/dz * dz/dw
+        auto y_trg = trg_or_grad;
+        auto grad_in = trg_or_grad;
+        auto dC_dy = type == BackPropType::Output ? -(y_trg - y) : grad_in; // y_trg : dC_dy
+        auto dy_dz = phi_diff(z, phi_type, phi_param_a, phi_param_k, phi_param_l);
         std::vector<float> dz_dw(Nw); // z = w0*x0 + w1*x1 + b => dz/dw0 = x0, dz/dw1 = x1, dz/db = 1.
         for (size_t i = 0; i < Nw; ++i)
           dz_dw[i] = inputs[i].get().value_or(0);
         auto dz_db = 1.f;
-        auto dC_dz = dC_df * df_dz;
+        auto dC_dz = dC_dy * dy_dz;
         auto dC_dw = stlutils::mult_scalar(dz_dw, dC_dz);
         auto dC_db = dC_dz * dz_db;
       
@@ -101,22 +107,25 @@ namespace ml
         w_diff_prev = w_diff;
         b_diff_prev = b_diff;
       
-        return dC_dw;
+        // Return dC/dz*w
+        auto grad_out = stlutils::mult_scalar(weights, dC_dz);
+        return grad_out;
       }
       
-      // #FIXME: update_backward(gradient) ?
-      
       // Forward-prop followed by a back-prop.
-      // y_trg : target output.
+      // type : output or hidden. If output, then y_trg is the target output,
+      //        if hidden, then it is the combined gradient from the next layer.
+      // y_trg_or_grad : target output or combined gradient from behind the next layer.
       // eta : learning rate (0.1).
       // mu : momentum term (0.05).
       // r : random term for simulated annealing-ish behaviour (0).
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
-      std::vector<float> train(float y_trg, float eta = 0.1f, float mu = 0.05f, float r = 0.f)
+      std::vector<float> train(BackPropType type, float trg_or_grad,
+                               float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
         update_forward();
-        return update_backward(y_trg, eta, mu, r);
+        return update_backward(type, trg_or_grad, eta, mu, r);
       }
     
       const float* output() const { return &y; }
@@ -229,34 +238,40 @@ namespace ml
       }
     
       // Back-prop
-      // y_trg : target output.
+      // type : output or hidden. If output, then y_trg is the target output,
+      //        if hidden, then it is the combined gradient from the next layer.
+      // y_trg_or_grad : target output or combined gradient from behind the next layer.
       // eta : learning rate (0.1).
       // mu : momentum term (0.05).
       // r : random term for simulated annealing-ish behaviour (0).
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
-      std::vector<std::vector<float>> update_backward(const std::vector<float>& y_trg,
+      std::vector<std::vector<float>> update_backward(BackPropType type,
+                                                      const std::vector<float>& trg_or_grad,
                                                       float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
-        assert(y_trg.size() == No);
+        assert(trg_or_grad.size() == No);
         std::vector<std::vector<float>> grad(No);
         for (size_t n_idx = 0; n_idx < No; ++n_idx)
-          grad[n_idx] = neurons[n_idx]->update_backward(y_trg[n_idx], eta, mu, r);
+          grad[n_idx] = neurons[n_idx]->update_backward(type, trg_or_grad[n_idx], eta, mu, r);
         return grad;
       }
     
       // Forward-prop followed by a back-prop.
-      // y_trg : target output.
+      // type : output or hidden. If output, then y_trg is the target output,
+      //        if hidden, then it is the combined gradient from the next layer.
+      // y_trg_or_grad : target output or combined gradient from behind the next layer.
       // eta : learning rate (0.1).
       // mu : momentum term (0.05).
       // r : random term for simulated annealing-ish behaviour (0).
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
-      std::vector<std::vector<float>> train(const std::vector<float>& y_trg,
+      std::vector<std::vector<float>> train(BackPropType type,
+                                            const std::vector<float>& trg_or_grad,
                                             float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
         update_forward();
-        return update_backward(y_trg, eta, mu, r);
+        return update_backward(type, trg_or_grad, eta, mu, r);
       }
     
       const std::vector<Input> output() const
@@ -462,7 +477,7 @@ namespace ml
         size_t No = num_outputs();
         assert(y_trg.size() == No);
         auto* l = layers.back().get();
-        auto grad = l->update_backward(y_trg, eta, mu, r);
+        auto grad = l->update_backward(BackPropType::Output, y_trg, eta, mu, r);
         for (int l_idx = static_cast<int>(Nl) - 2; l_idx >= 0; --l_idx)
         {
           size_t Ni = l->num_inputs();
@@ -472,7 +487,7 @@ namespace ml
           for (size_t o_idx = 0; o_idx < No; ++o_idx)
             for (size_t i_idx = 0; i_idx < Ni; ++i_idx)
               grad_flat[i_idx] += grad[o_idx][i_idx];
-          grad = l->update_backward(grad_flat, eta, mu, r);
+          grad = l->update_backward(BackPropType::Hidden, grad_flat, eta, mu, r);
         }
         return grad;
       }
