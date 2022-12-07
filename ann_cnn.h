@@ -139,25 +139,27 @@ namespace ml
       return ret;
     }
   
-    enum class ConvType { Full, Same, Valid };
+    enum class ConvRange { Full, Same, Valid };
+    enum class ConvType { Convolution, Correlation };
   
     std::vector<float> conv_1d(const std::vector<float>& x,
                                const std::vector<float>& w_kernel, float bias = 0.f,
-                               ConvType type = ConvType::Full)
+                               ConvRange range = ConvRange::Full,
+                               ConvType type = ConvType::Convolution)
     {
       auto Ni = static_cast<int>(x.size());
       auto Nk = static_cast<int>(w_kernel.size());
       int No = 0;
       int pad_L = 0;
       int pad_R = 0;
-      switch (type)
+      switch (range)
       {
-        case ConvType::Full:
+        case ConvRange::Full:
           No = Ni + Nk - 1;
           pad_L = Nk - 1;
           pad_R = pad_L;
           break;
-        case ConvType::Same:
+        case ConvRange::Same:
           No = Ni;
           if (Nk % 2 == 1)
           {
@@ -170,7 +172,7 @@ namespace ml
             pad_R = pad_L + 1;
           }
           break;
-        case ConvType::Valid:
+        case ConvRange::Valid:
           No = std::max(0, Ni - Nk + 1);
           break;
       }
@@ -178,7 +180,8 @@ namespace ml
       auto pad_vec_R = stlutils::repval<float>(0, pad_R);
       auto xx = stlutils::cat(pad_vec_L, x, pad_vec_R);
       auto kk = w_kernel;
-      std::reverse(kk.begin(), kk.end());
+      if (type == ConvType::Convolution)
+        std::reverse(kk.begin(), kk.end());
       std::vector<float> y(No);
       for (int o_idx = 0; o_idx < No; ++o_idx)
         y[o_idx] = stlutils::dot(stlutils::subset(xx, o_idx, o_idx + Nk - 1), kk) + bias;
@@ -188,7 +191,8 @@ namespace ml
     std::vector<std::vector<float>> conv_2d(const std::vector<std::vector<float>>& x,
                                             const std::vector<std::vector<float>>& w_kernel,
                                             float bias = 0.f,
-                                            ConvType type = ConvType::Full)
+                                            ConvRange range = ConvRange::Full,
+                                            ConvType type = ConvType::Convolution)
     {
       auto Nir = static_cast<int>(x.size());
       auto Nic = static_cast<int>(x.back().size());
@@ -200,9 +204,9 @@ namespace ml
       int pad_R = 0;
       int pad_D = 0;
       int pad_U = 0;
-      switch (type)
+      switch (range)
       {
-        case ConvType::Full:
+        case ConvRange::Full:
           Nor = Nir + Nkr - 1;
           pad_D = Nkr - 1;
           pad_U = pad_D;
@@ -210,7 +214,7 @@ namespace ml
           pad_L = Nkc - 1;
           pad_R = pad_L;
           break;
-        case ConvType::Same:
+        case ConvRange::Same:
         {
           Nor = Nir;
           Noc = Nic;
@@ -231,7 +235,7 @@ namespace ml
           set_padding(pad_L, pad_R, Nkc);
           break;
         }
-        case ConvType::Valid:
+        case ConvRange::Valid:
           Nor = std::max(0, Nir - Nkr + 1);
           Noc = std::max(0, Nic - Nkc + 1);
           break;
@@ -248,9 +252,12 @@ namespace ml
         row = stlutils::cat(pad_vec_L, row, pad_vec_R);
       
       auto kk = w_kernel;
-      std::reverse(kk.begin(), kk.end());
-      for (auto& row : kk)
-        std::reverse(row.begin(), row.end());
+      if (type == ConvType::Convolution)
+      {
+        std::reverse(kk.begin(), kk.end());
+        for (auto& row : kk)
+          std::reverse(row.begin(), row.end());
+      }
       
       std::vector<std::vector<float>> y(Nor);
       for (auto& row : y)
