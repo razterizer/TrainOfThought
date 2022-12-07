@@ -104,6 +104,8 @@ namespace ml
         return dC_dw;
       }
       
+      // #FIXME: update_backward(gradient) ?
+      
       // Forward-prop followed by a back-prop.
       // y_trg : target output.
       // eta : learning rate (0.1).
