@@ -166,7 +166,7 @@ namespace ml
     //
   
     enum class GenWeightsType { Zero, MinusOne, One, Two, Rnd_0_p1, Rndn_0_p1, Rnd_m1_p1, Rndn_m1_p1 };
-    float gen_w(GenWeightsType type)
+    float generate_weight(GenWeightsType type)
     {
       switch (type)
       {
@@ -187,16 +187,16 @@ namespace ml
       for (auto& w_o : w)
       {
         for (size_t i_idx = 0; i_idx < Ni; ++i_idx)
-          w_o.emplace_back(gen_w(type));
+          w_o.emplace_back(generate_weight(type));
       }
       return w;
     }
   
-    std::vector<float> generate_biases(GenWeightsType type, size_t No)
+    std::vector<float> generate_weights(GenWeightsType type, size_t No)
     {
       std::vector<float> b(No);
       for (auto& b_o : b)
-        b_o = gen_w(type);
+        b_o = generate_weight(type);
       return b;
     }
   
