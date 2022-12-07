@@ -93,7 +93,7 @@ namespace ml
         auto w_diff = stlutils::mult_scalar(dC_dw, -eta);
         w_diff = stlutils::add(w_diff, stlutils::mult_scalar(w_diff_prev, mu));
         w_diff = stlutils::add_scalar(w_diff, r);
-        auto b_diff = eta * (-dC_db + mu * b_diff_prev + r);
+        auto b_diff = -eta * dC_db + mu * b_diff_prev + r;
       
         weights = stlutils::add(weights, w_diff);
         bias += b_diff;
