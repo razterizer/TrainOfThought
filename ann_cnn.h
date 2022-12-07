@@ -277,8 +277,8 @@ namespace ml
     // Function for transferring data from convolutional network domain to regular dense network domain.
     std::vector<Input> flatten_2d_to_1d_input(const std::vector<std::vector<float>>& x)
     {
-      auto Nr = x.size();
-      auto Nc = x.back().size();
+      auto Nr = x.size(); // rows
+      auto Nc = x.back().size(); // columns
       std::vector<Input> ret(Nr * Nc);
       for (size_t r_idx = 0; r_idx < Nr; ++r_idx)
         for (size_t c_idx = 0; c_idx < Nc; ++c_idx)
