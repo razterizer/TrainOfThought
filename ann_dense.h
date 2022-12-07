@@ -80,12 +80,12 @@ namespace ml
       // r : random term for simulated annealing-ish behaviour (0).
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
-      std::vector<float> update_backward(BackPropType type, float trg_or_grad,
+      std::vector<float> update_backward(BackPropType type, float y_trg_or_grad,
                                          float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
         // dC/dw1 = dC/dy * dy/dz * dz/dw
-        auto y_trg = trg_or_grad;
-        auto grad_in = trg_or_grad;
+        auto y_trg = y_trg_or_grad;
+        auto grad_in = y_trg_or_grad;
         auto dC_dy = type == BackPropType::Output ? -(y_trg - y) : grad_in; // y_trg : dC_dy
         auto dy_dz = phi_diff(z, phi_type, phi_param_a, phi_param_k, phi_param_l);
         std::vector<float> dz_dw(Nw); // z = w0*x0 + w1*x1 + b => dz/dw0 = x0, dz/dw1 = x1, dz/db = 1.
@@ -121,11 +121,11 @@ namespace ml
       // r : random term for simulated annealing-ish behaviour (0).
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
-      std::vector<float> train(BackPropType type, float trg_or_grad,
+      std::vector<float> train(BackPropType type, float y_trg_or_grad,
                                float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
         update_forward();
-        return update_backward(type, trg_or_grad, eta, mu, r);
+        return update_backward(type, y_trg_or_grad, eta, mu, r);
       }
     
       const float* output() const { return &y; }
@@ -247,13 +247,13 @@ namespace ml
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
       std::vector<std::vector<float>> update_backward(BackPropType type,
-                                                      const std::vector<float>& trg_or_grad,
+                                                      const std::vector<float>& y_trg_or_grad,
                                                       float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
-        assert(trg_or_grad.size() == No);
+        assert(y_trg_or_grad.size() == No);
         std::vector<std::vector<float>> grad(No);
         for (size_t n_idx = 0; n_idx < No; ++n_idx)
-          grad[n_idx] = neurons[n_idx]->update_backward(type, trg_or_grad[n_idx], eta, mu, r);
+          grad[n_idx] = neurons[n_idx]->update_backward(type, y_trg_or_grad[n_idx], eta, mu, r);
         return grad;
       }
     
@@ -267,11 +267,11 @@ namespace ml
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
       std::vector<std::vector<float>> train(BackPropType type,
-                                            const std::vector<float>& trg_or_grad,
+                                            const std::vector<float>& y_trg_or_grad,
                                             float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
         update_forward();
-        return update_backward(type, trg_or_grad, eta, mu, r);
+        return update_backward(type, y_trg_or_grad, eta, mu, r);
       }
     
       const std::vector<Input> output() const
@@ -465,19 +465,23 @@ namespace ml
       }
     
       // Back-prop
-      // y_trg : target output.
+      // type : output or hidden. If output, then y_trg is the target output,
+      //        if hidden, then it is the combined gradient from the next layer.
+      //        Normally set to Output.
+      // y_trg_or_grad : target output or combined gradient from behind the next layer.
       // eta : learning rate (0.1).
       // mu : momentum term (0.05).
       // r : random term for simulated annealing-ish behaviour (0).
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
-      std::vector<std::vector<float>> update_backward(const std::vector<float>& y_trg,
+      std::vector<std::vector<float>> update_backward(BackPropType type,
+                                                      const std::vector<float>& y_trg_or_grad,
                                                       float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
         size_t No = num_outputs();
-        assert(y_trg.size() == No);
+        assert(y_trg_or_grad.size() == No);
         auto* l = layers.back().get();
-        auto grad = l->update_backward(BackPropType::Output, y_trg, eta, mu, r);
+        auto grad = l->update_backward(type, y_trg_or_grad, eta, mu, r);
         for (int l_idx = static_cast<int>(Nl) - 2; l_idx >= 0; --l_idx)
         {
           size_t Ni = l->num_inputs();
@@ -493,17 +497,21 @@ namespace ml
       }
     
       // Forward-prop followed by a back-prop.
-      // y_trg : target output.
+      // type : output or hidden. If output, then y_trg is the target output,
+      //        if hidden, then it is the combined gradient from the next layer.
+      //        Normally set to Output.
+      // y_trg_or_grad : target output or combined gradient from behind the next layer.
       // eta : learning rate (0.1).
       // mu : momentum term (0.05).
       // r : random term for simulated annealing-ish behaviour (0).
       // diff = -eta * grad + mu * diff_prev + r
       // Returns gradient.
-      std::vector<std::vector<float>> train(const std::vector<float>& y_trg,
+      std::vector<std::vector<float>> train(BackPropType type,
+                                            const std::vector<float>& y_trg_or_grad,
                                             float eta = 0.1f, float mu = 0.05f, float r = 0.f)
       {
         update_forward();
-        return update_backward(y_trg, eta, mu, r);
+        return update_backward(type, y_trg_or_grad, eta, mu, r);
       }
     
       const std::vector<Input> output() const
