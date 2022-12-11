@@ -183,6 +183,7 @@ namespace ml
               case PhiType::Parametric_ReLU: table[w_idx] += "Parametric_ReLU"; break;
               case PhiType::Leaky_ReLU: table[w_idx] += "Leaky_ReLU"; break;
               case PhiType::Parametric_Leaky_ReLU: table[w_idx] += "Parametric_Leaky_ReLU"; break;
+              case PhiType::L_ReLU: table[w_idx] += "L_ReLU"; break;
               case PhiType::ELU: table[w_idx] += "ELU"; break;
               case PhiType::Swish: table[w_idx] += "Swish"; break;
               case PhiType::GELU: table[w_idx] += "GELU"; break;

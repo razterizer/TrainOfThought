@@ -31,6 +31,7 @@ namespace ml
       Parametric_ReLU,
       Leaky_ReLU,
       Parametric_Leaky_ReLU,
+      L_ReLU,
       ELU,
       Swish,
       GELU,
@@ -51,6 +52,7 @@ namespace ml
         case PhiType::Parametric_ReLU: return std::max(0.f, k*z + l);
         case PhiType::Leaky_ReLU: return std::max(0.1f*z, z);
         case PhiType::Parametric_Leaky_ReLU: return std::max(a*(k*z + l), k*z + l);
+        case PhiType::L_ReLU: return std::log((1 + std::exp(z))*0.5f) + 0.1f*z;
         case PhiType::ELU: return z < 0 ? a*(std::exp(z) - 1) : z;
         case PhiType::Swish: return z*phi(z, PhiType::Sigmoid);
         //case PhiType::GELU: return 0.5*z*(1 + std::tanh(M_2_SQRTPI*M_SQRT1_2*(z + 0.044715*math::cube(z))));
@@ -81,6 +83,11 @@ namespace ml
         case PhiType::Parametric_ReLU: return z < -l/k ? 0 : k;
         case PhiType::Leaky_ReLU: return z < 0 ? 0.1 : 1;
         case PhiType::Parametric_Leaky_ReLU: return z < -l/k ? a*k : k;
+        case PhiType::L_ReLU:
+        {
+          auto ez = std::exp(z);
+          return ez/(1 + ez) + 0.1f;
+        }
         case PhiType::ELU: return z < 0 ? phi(z, type, a, k, l) + a : 1;
         case PhiType::Swish:
         {
