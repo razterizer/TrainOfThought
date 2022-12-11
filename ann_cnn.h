@@ -14,7 +14,8 @@ namespace ml
   namespace ann
   {
   
-    std::vector<float> activation_1d(const std::vector<float>& x, PhiType phi_type, float a = 1.f, float k = 1.f, float l = 1.1f)
+    std::vector<float> activation_1d(const std::vector<float>& x, PhiType phi_type,
+                                     float a = 1.f, float k = 1.f, float l = 1.1f)
     {
       auto N = x.size();
       std::vector<float> ret(N);
@@ -23,12 +24,33 @@ namespace ml
       return ret;
     }
   
-    std::vector<std::vector<float>> activation_2d(const std::vector<std::vector<float>>& x, PhiType phi_type, float a = 1.f, float k = 1.f, float l = 1.1f)
+    std::vector<float> activation_diff_1d(const std::vector<float>& x, PhiType phi_type,
+                                          float a = 1.f, float k = 1.f, float l = 1.1f)
+    {
+      auto N = x.size();
+      std::vector<float> ret(N);
+      for (size_t e_idx = 0; e_idx < N; ++e_idx)
+        ret[e_idx] = phi_diff(x[e_idx], phi_type, a, k, l);
+      return ret;
+    }
+  
+    std::vector<std::vector<float>> activation_2d(const std::vector<std::vector<float>>& x, PhiType phi_type,
+                                                  float a = 1.f, float k = 1.f, float l = 1.1f)
     {
       auto N = x.size();
       std::vector<std::vector<float>> ret(N);
       for (size_t r_idx = 0; r_idx < N; ++r_idx)
         ret[r_idx] = activation_1d(x[r_idx], phi_type, a, k, l);
+      return ret;
+    }
+  
+    std::vector<std::vector<float>> activation_diff_2d(const std::vector<std::vector<float>>& x, PhiType phi_type,
+                                                       float a = 1.f, float k = 1.f, float l = 1.1f)
+    {
+      auto N = x.size();
+      std::vector<std::vector<float>> ret(N);
+      for (size_t r_idx = 0; r_idx < N; ++r_idx)
+        ret[r_idx] = activation_diff_1d(x[r_idx], phi_type, a, k, l);
       return ret;
     }
   
