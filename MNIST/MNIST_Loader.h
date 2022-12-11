@@ -62,6 +62,19 @@
 namespace mnist
 {
 
+  enum class MNIST_Subset { Training, Test };
+
+  struct MNIST_Unit
+  {
+    std::vector<std::vector<unsigned char>> image;
+    unsigned char label = 255;
+    MNIST_Unit() = default;
+    MNIST_Unit(const std::vector<std::vector<unsigned char>>& im, unsigned char lbl)
+      : image(im), label(lbl)
+    {}
+    bool empty() const { return image.empty(); }
+  };
+
   class MNIST_Loader
   {
     std::vector<unsigned char> training_labels;
@@ -104,10 +117,9 @@ namespace mnist
       }
     }
     
-    enum class MNIST_Subset { Training, Test };
-    
-    void print(MNIST_Subset subset, size_t img_idx, bool shaded = false) const
+    MNIST_Unit get(MNIST_Subset subset, size_t img_idx) const
     {
+      MNIST_Unit ret;
       const std::vector<unsigned char>* labels = nullptr;
       const std::vector<std::vector<std::vector<unsigned char>>>* images = nullptr;
       switch (subset)
@@ -121,21 +133,28 @@ namespace mnist
           images = &training_images;
           break;
       }
-      
       if (labels == nullptr || images == nullptr)
+        return ret;
+      
+      ret.label = (*labels)[img_idx];
+      ret.image = (*images)[img_idx];
+      return ret;
+    }
+    
+    void print(MNIST_Subset subset, size_t img_idx, bool shaded = false) const
+    {
+      auto unit = get(subset, img_idx);
+      if (unit.empty())
         return;
       
-      const auto label = (*labels)[img_idx];
-      const auto& img = (*images)[img_idx];
-      
-      std::cout << "=== MNIST Image " << img_idx << " --- label: " << static_cast<int>(label) << " ===\n";
+      std::cout << "=== MNIST Image " << img_idx << " --- label: " << static_cast<int>(unit.label) << " ===\n";
       for (size_t r_idx = 0; r_idx < Nr; ++r_idx)
       {
         std::cout << " ";
         if (shaded)
           for (size_t c_idx = 0; c_idx < Nc; ++c_idx)
           {
-            auto px = img[r_idx][c_idx] / 255.f;
+            auto px = unit.image[r_idx][c_idx] / 255.f;
             if (px == 0)
               std::cout << " ";
             else if (px < 0.25f)
@@ -149,7 +168,7 @@ namespace mnist
           }
         else
           for (size_t c_idx = 0; c_idx < Nc; ++c_idx)
-            std::cout << str::adjust_str(std::to_string(static_cast<int>(img[r_idx][c_idx])), str::Adjustment::Right, 3) << " ";
+            std::cout << str::adjust_str(std::to_string(static_cast<int>(unit.image[r_idx][c_idx])), str::Adjustment::Right, 3) << " ";
         std::cout << "\n";
       }
       std::cout << str::rep_char('=', 100) << "\n";
