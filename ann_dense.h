@@ -107,7 +107,7 @@ namespace ml
         w_diff_prev = w_diff;
         b_diff_prev = b_diff;
       
-        // Return dC/dz*w
+        // Return dC/dx = dC/dz*w
         auto grad_out = stlutils::mult_scalar(weights, dC_dz);
         return grad_out;
       }
@@ -449,7 +449,7 @@ namespace ml
     //
     // x3
     //
-    // [Ck] = [ck0, ck1, ck2, ck3]
+    // [Cj] = [cj0, cj1, cj2, cj3]
     //
     // y_0 = sum(w_0j * phi_j(), j=0..2);
     // y_1 = sum(w_1j * phi_j(), j=0..2);
@@ -463,21 +463,24 @@ namespace ml
       const size_t Nh = 0;
       const size_t No = 0;
       std::vector<Input> inputs; // Ni
+      // Prototypes, mu or centroids. Picked from randomly selected training examples.
       std::vector<std::vector<float>> centroids; // Nh x Ni
-      std::vector<float> distances; // Nh
-      std::vector<float> sigma;  // Nh
+      std::vector<float> dist_sq; // Nh
+      std::vector<float> beta;  // Nh
       std::vector<float> phi; // Nh
       std::vector<std::vector<float>> weights; // No x Nh
+      std::vector<float> bias; // No
       std::vector<float> outputs; // No
     
       std::vector<std::vector<float>> w_diff_prev;
     
     public:
       RBFNetwork(const std::vector<std::vector<float>>& c,
-               const std::vector<float>& s,
-               const std::vector<std::vector<float>>& w)
-        : No(w.size()), Nh(s.size()), Ni(c[0].size())
-        , centroids(c), distances(Nh), sigma(s), phi(Nh), weights(w)
+                 const std::vector<float>& phi_beta,
+                 const std::vector<std::vector<float>>& w,
+                 const std::vector<float>& b)
+        : No(w.size()), Nh(phi_beta.size()), Ni(c[0].size())
+        , centroids(c), dist_sq(Nh), beta(phi_beta), phi(Nh), weights(w), bias(b)
         , outputs(No)
       {}
     
@@ -493,18 +496,17 @@ namespace ml
         for (size_t h_idx = 0; h_idx < Nh; ++h_idx)
         {
           const auto& c_h = centroids[h_idx];
-          auto& dist_h = distances[h_idx];
-          dist_h = 0;
+          auto& dist_sq_h = dist_sq[h_idx];
+          dist_sq_h = 0;
           for (size_t i_idx = 0; i_idx < Ni; ++i_idx)
-            dist_h += math::sq(inputs[i_idx].get().value_or(nan) - c_h[i_idx]);
-          dist_h = std::sqrt(dist_h); // Optional?
+            dist_sq_h += math::sq(inputs[i_idx].get().value_or(nan) - c_h[i_idx]);
         }
         for (size_t h_idx = 0; h_idx < Nh; ++h_idx)
-          phi[h_idx] = std::exp(-0.5f*math::sq(distances[h_idx]/sigma[h_idx]));
+          phi[h_idx] = std::exp(-beta[h_idx]*dist_sq[h_idx]);
         for (size_t o_idx = 0; o_idx < No; ++o_idx)
         {
           auto o = outputs[o_idx];
-          o = 0;
+          o = beta[o_idx];
           const auto& w_o = weights[o_idx];
           for (size_t h_idx = 0; h_idx < Nh; ++h_idx)
             o += phi[h_idx]*w_o[h_idx];
@@ -525,10 +527,18 @@ namespace ml
         assert(y_trg.size() == No);
         std::vector<std::vector<float>> grad(No);
         // dC/dwi = dC/dy * dy/dwi
+        // dC/dc_h = dC/dy_o * dy_o/dd_h * dd_h/dc_h
+        // dC/dc = dC/dy * dy/dd * dd/dc
+        // dC/dw_h = dC/dy * dy/dw_h = dC/dy * phi_h
+        float dC_dy = 0;
+        for (size_t o_idx = 0; o_idx < No; ++o_idx)
+          dC_dy += -(y_trg[o_idx] - outputs[o_idx]);
+        
+        std::vector<float> dC_dw = stlutils::mult_scalar(phi, dC_dy); // dC/dy * dy/dw_h
+        
+        
         for (size_t o_idx = 0; o_idx < No; ++o_idx)
         {
-          auto err_diff = -(y_trg[o_idx] - outputs[o_idx]);
-          auto dC_dy = err_diff;
           auto& w_o = weights[o_idx];
           std::vector<float> dy_dw(Ni);
           for (size_t i_idx = 0; i_idx < Ni; ++i_idx)
