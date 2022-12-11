@@ -320,6 +320,17 @@ namespace ml
             ret[l_idx*Nr*Nc + r_idx*Nc + c_idx] = x[l_idx][r_idx][c_idx];
       return ret;
     }
+  
+    std::vector<std::vector<std::vector<float>>> unflatten_1d_to_3d(const std::vector<float>& x, size_t Nl, size_t Nr, size_t Nc)
+    {
+      std::vector<std::vector<std::vector<float>>> ret;
+      stlutils::resize(ret, Nl, Nr, Nc);
+      for (size_t l_idx = 0; l_idx < Nl; ++l_idx)
+        for (size_t r_idx = 0; r_idx < Nr; ++r_idx)
+          for (size_t c_idx = 0; c_idx < Nc; ++c_idx)
+            ret[l_idx][r_idx][c_idx] = x[l_idx*Nr*Nc + r_idx*Nc + c_idx];
+      return ret;
+    }
   }
 
 }
