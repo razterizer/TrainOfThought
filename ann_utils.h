@@ -58,6 +58,11 @@ namespace ml
         //case PhiType::GELU: return 0.5*z*(1 + std::tanh(M_2_SQRTPI*M_SQRT1_2*(z + 0.044715*math::cube(z))));
         case PhiType::GELU: return 0.5*z*(1 + std::erf(z/M_SQRT2));
         case PhiType::SELU: return l*phi(z, PhiType::ELU, a, k, l);
+#ifdef _WIN32
+#ifndef _MSC_VER
+        default: return 0.f; // Should not be necessary as switch scope is complete.
+#endif
+#endif
       }
     }
   
@@ -107,6 +112,11 @@ namespace ml
           return 0.5f*(1 + std::erf(z/M_SQRT2)) + (std::exp(-math::sq(z)*0.5f)*z)*c_1_sqrt_2pi;
         }
         case PhiType::SELU: return l*phi_diff(z, PhiType::ELU, a, k, l);
+#ifdef _WIN32
+#ifndef _MSC_VER
+        default: return 0.f; // Should not be necessary as switch scope is complete.
+#endif
+#endif
       }
     }
   
@@ -185,6 +195,11 @@ namespace ml
         case GenWeightsType::Rndn_0_p1: return rnd::randn_clamp(0.5, 1, 0, 1);
         case GenWeightsType::Rnd_m1_p1: return rnd::rand_float(-1, 1);
         case GenWeightsType::Rndn_m1_p1: return rnd::randn_clamp(0, 2, -1, 1);
+#ifdef _WIN32
+#ifndef _MSC_VER
+        default: return 0.f; // Should not be necessary as switch scope is complete.
+#endif
+#endif
       }
     }
   
