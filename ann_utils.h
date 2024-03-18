@@ -56,7 +56,7 @@ namespace ml
         case PhiType::ELU: return z < 0 ? a*(std::exp(z) - 1) : z;
         case PhiType::Swish: return z*phi(z, PhiType::Sigmoid);
         //case PhiType::GELU: return 0.5*z*(1 + std::tanh(M_2_SQRTPI*M_SQRT1_2*(z + 0.044715*math::cube(z))));
-        case PhiType::GELU: return 0.5f*z*(1 + std::erf(z/static_cast<float>(M_SQRT2)));
+        case PhiType::GELU: return 0.5f*z*(1 + std::erf(z/math::c_sqrt2));
         case PhiType::SELU: return l*phi(z, PhiType::ELU, a, k, l);
 #ifdef _WIN32
 //#ifndef _MSC_VER
@@ -108,8 +108,8 @@ namespace ml
           //return 0.5f + (0.398942f*z + 0.0535161f*z3)*math::sq(sech(b)) + 0.5f*std::tanh(b);
           
           // 1/2*(erf(z/sqrt(2)) + 1) + exp(-z^2/2)*z/(sqrt(2*pi))
-          static const auto c_1_sqrt_2pi = static_cast<float>(M_2_SQRTPI/M_SQRT2);
-          return 0.5f*(1 + std::erf(z/static_cast<float>(M_SQRT2))) + (std::exp(-math::sq(z)*0.5f)*z)*c_1_sqrt_2pi;
+          static const auto c_1_sqrt_2pi = math::c_2_sqrt_pi/math::c_sqrt2;
+          return 0.5f*(1 + std::erf(z/math::c_sqrt2)) + (std::exp(-math::sq(z)*0.5f)*z)*c_1_sqrt_2pi;
         }
         case PhiType::SELU: return l*phi_diff(z, PhiType::ELU, a, k, l);
 #ifdef _WIN32
