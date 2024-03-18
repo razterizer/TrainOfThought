@@ -69,7 +69,7 @@ namespace ml
       auto rest = static_cast<float>(Ni - filter_size)/stride + 1 - No;
       if (use_padding && rest != 0) // #FIXME: Bad code smell.
       {
-        xx.emplace_back(0);
+        xx.emplace_back(0.f);
         No++;
       }
       std::vector<float> ret(No);
@@ -121,7 +121,7 @@ namespace ml
       if (use_padding && rest_c != 0)
       {
         for (auto& row : xx)
-          row.emplace_back(0);
+          row.emplace_back(0.f);
         Noc++;
       }
       std::vector<std::vector<float>> ret(Nor);

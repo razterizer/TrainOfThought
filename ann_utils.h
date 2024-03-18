@@ -42,10 +42,10 @@ namespace ml
     {
       switch (type)
       {
-        case PhiType::BinaryStep: return z < 0 ? 0 : 1;
-        case PhiType::Heaviside_BinaryStep: return z <= 0 ? 0 : 1;
+        case PhiType::BinaryStep: return z < 0 ? 0.f : 1.f;
+        case PhiType::Heaviside_BinaryStep: return z <= 0 ? 0.f : 1.f;
         case PhiType::Linear: return z;
-        case PhiType::Sigmoid: return 1./(1 + std::exp(-z));
+        case PhiType::Sigmoid: return 1.f/(1 + std::exp(-z));
         case PhiType::Tanh: return std::tanh(z);
         case PhiType::Parametric_Tanh: return a*std::tanh(k*z);
         case PhiType::ReLU: return std::max(0.f, z);
@@ -56,12 +56,12 @@ namespace ml
         case PhiType::ELU: return z < 0 ? a*(std::exp(z) - 1) : z;
         case PhiType::Swish: return z*phi(z, PhiType::Sigmoid);
         //case PhiType::GELU: return 0.5*z*(1 + std::tanh(M_2_SQRTPI*M_SQRT1_2*(z + 0.044715*math::cube(z))));
-        case PhiType::GELU: return 0.5*z*(1 + std::erf(z/M_SQRT2));
+        case PhiType::GELU: return 0.5f*z*(1 + std::erf(z/static_cast<float>(M_SQRT2)));
         case PhiType::SELU: return l*phi(z, PhiType::ELU, a, k, l);
 #ifdef _WIN32
-#ifndef _MSC_VER
+//#ifndef _MSC_VER
         default: return 0.f; // Should not be necessary as switch scope is complete.
-#endif
+//#endif
 #endif
       }
     }
@@ -84,9 +84,9 @@ namespace ml
           return 1 - math::sq(th);
         }
         case PhiType::Parametric_Tanh: return a*k/math::sq(std::cosh(k*z));
-        case PhiType::ReLU: return z < 0 ? 0 : 1;
+        case PhiType::ReLU: return z < 0 ? 0.f : 1.f;
         case PhiType::Parametric_ReLU: return z < -l/k ? 0 : k;
-        case PhiType::Leaky_ReLU: return z < 0 ? 0.1 : 1;
+        case PhiType::Leaky_ReLU: return z < 0 ? 0.1f : 1.f;
         case PhiType::Parametric_Leaky_ReLU: return z < -l/k ? a*k : k;
         case PhiType::L_ReLU:
         {
@@ -108,14 +108,14 @@ namespace ml
           //return 0.5f + (0.398942f*z + 0.0535161f*z3)*math::sq(sech(b)) + 0.5f*std::tanh(b);
           
           // 1/2*(erf(z/sqrt(2)) + 1) + exp(-z^2/2)*z/(sqrt(2*pi))
-          static const auto c_1_sqrt_2pi = M_2_SQRTPI/M_SQRT2;
-          return 0.5f*(1 + std::erf(z/M_SQRT2)) + (std::exp(-math::sq(z)*0.5f)*z)*c_1_sqrt_2pi;
+          static const auto c_1_sqrt_2pi = static_cast<float>(M_2_SQRTPI/M_SQRT2);
+          return 0.5f*(1 + std::erf(z/static_cast<float>(M_SQRT2))) + (std::exp(-math::sq(z)*0.5f)*z)*c_1_sqrt_2pi;
         }
         case PhiType::SELU: return l*phi_diff(z, PhiType::ELU, a, k, l);
 #ifdef _WIN32
-#ifndef _MSC_VER
+//#ifndef _MSC_VER
         default: return 0.f; // Should not be necessary as switch scope is complete.
-#endif
+//#endif
 #endif
       }
     }
@@ -196,9 +196,9 @@ namespace ml
         case GenWeightsType::Rnd_m1_p1: return rnd::rand_float(-1, 1);
         case GenWeightsType::Rndn_m1_p1: return rnd::randn_clamp(0, 2, -1, 1);
 #ifdef _WIN32
-#ifndef _MSC_VER
+//#ifndef _MSC_VER
         default: return 0.f; // Should not be necessary as switch scope is complete.
-#endif
+//#endif
 #endif
       }
     }
