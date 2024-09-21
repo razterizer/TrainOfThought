@@ -34,6 +34,7 @@
 		076AB0782C9E444200531419 /* ann_dense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ann_dense.h; sourceTree = "<group>"; };
 		076AB07D2C9E4F3C00531419 /* unit_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = unit_tests.cpp; sourceTree = "<group>"; };
 		076AB0812C9E52F000531419 /* build_unit_tests.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_unit_tests.sh; sourceTree = "<group>"; };
+		076AB0832C9ECE0300531419 /* build-ubuntu.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-ubuntu.yml"; path = ".github/workflows/build-ubuntu.yml"; sourceTree = "<group>"; };
 		07B1761929168F820057676B /* libCore.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCore.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -79,11 +80,20 @@
 			path = MNIST/wichtounet_mnist_reader;
 			sourceTree = "<group>";
 		};
+		076AB0822C9EB0A500531419 /* workflows */ = {
+			isa = PBXGroup;
+			children = (
+				076AB0832C9ECE0300531419 /* build-ubuntu.yml */,
+			);
+			name = workflows;
+			sourceTree = "<group>";
+		};
 		07B1761029168F820057676B = {
 			isa = PBXGroup;
 			children = (
 				0739D9BE2BA1D66000964E96 /* LICENSE */,
 				0760B6EF2B9C8F3B0032CACD /* README.md */,
+				076AB0822C9EB0A500531419 /* workflows */,
 				076AB06A2C9E441A00531419 /* MNIST */,
 				076AB0762C9E444200531419 /* ann_cnn.h */,
 				076AB0782C9E444200531419 /* ann_dense.h */,
