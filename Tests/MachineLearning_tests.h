@@ -6,10 +6,10 @@
 //
 
 #pragma once
-#include "../MachineLearning/ann_dense.h"
-#include "../MachineLearning/ann_cnn.h"
-#include "../MachineLearning/LeNet.h"
-#include "../MachineLearning/MNIST/MNIST_Loader.h"
+#include "../ann_dense.h"
+#include "../ann_cnn.h"
+#include "../LeNet.h"
+#include "../MNIST/MNIST_Loader.h"
 #include <unistd.h>
 #include <assert.h>
 
