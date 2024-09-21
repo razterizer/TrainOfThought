@@ -33,6 +33,7 @@
 		076AB0772C9E444200531419 /* ann_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ann_utils.h; sourceTree = "<group>"; };
 		076AB0782C9E444200531419 /* ann_dense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ann_dense.h; sourceTree = "<group>"; };
 		076AB07D2C9E4F3C00531419 /* unit_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = unit_tests.cpp; sourceTree = "<group>"; };
+		076AB0812C9E52F000531419 /* build_unit_tests.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_unit_tests.sh; sourceTree = "<group>"; };
 		07B1761929168F820057676B /* libCore.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCore.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -50,6 +51,7 @@
 		0723D8262938A15900C567B5 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				076AB0812C9E52F000531419 /* build_unit_tests.sh */,
 				0723D8172938299300C567B5 /* MachineLearning_tests.h */,
 				076AB07D2C9E4F3C00531419 /* unit_tests.cpp */,
 			);
