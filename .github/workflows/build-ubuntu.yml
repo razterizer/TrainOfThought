@@ -42,6 +42,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: List files
+        run: ls
+        
       # Step 1: Create the bin folder if it doesn't exist
       - name: Create bin folder
         run: mkdir -p Tests/bin
@@ -56,6 +59,5 @@ jobs:
       # Step 3: Run the unit tests
       - name: Run unit tests
         run: |
-          ls Tests/bin
           ./Tests/bin/unit_tests
         continue-on-error: false # Ensure errors are not bypassed
