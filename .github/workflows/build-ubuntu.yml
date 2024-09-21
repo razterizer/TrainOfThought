@@ -45,6 +45,8 @@ jobs:
       - name: List files
         run: |
           pwd
+          cd ..
+          pwd
           ls
         
       # Step 1: Create the bin folder if it doesn't exist
