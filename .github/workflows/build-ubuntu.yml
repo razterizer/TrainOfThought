@@ -65,11 +65,8 @@ jobs:
       # Step 4: Run the unit tests
       - name: Run unit tests
         run: |
+          cd Tests
           ls
           echo ---
-          ls Tests
-          echo ---
-          ls Tests/bin
-          echo ---
-          ./Tests/bin/unit_tests
+          ./bin/unit_tests
         continue-on-error: false # Ensure errors are not bypassed
