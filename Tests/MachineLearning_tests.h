@@ -266,6 +266,7 @@ namespace ml
         }));
       }
       
+#if false
       // LeNet5
       
       char cwd[PATH_MAX];
@@ -287,6 +288,7 @@ namespace ml
       {
         lenet5.train(ex);
       }
+#endif
     }
   
   }
