@@ -38,5 +38,7 @@ jobs:
       - name: test
         run: |
           cd Tests
+          ls
+          ls bin
           ./bin/unit_tests
         continue-on-error: false # Ensure errors are not bypassed
