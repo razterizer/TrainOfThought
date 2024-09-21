@@ -36,5 +36,7 @@ jobs:
 
     steps:
       - name: test
-        run: Tests/bin/unit_tests
+        run: |
+          cd Tests
+          ./bin/unit_tests
         continue-on-error: false # Ensure errors are not bypassed
