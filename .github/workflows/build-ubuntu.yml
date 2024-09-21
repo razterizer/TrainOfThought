@@ -43,7 +43,9 @@ jobs:
 
     steps:
       - name: List files
-        run: ls
+        run: |
+          pwd
+          ls
         
       # Step 1: Create the bin folder if it doesn't exist
       - name: Create bin folder
