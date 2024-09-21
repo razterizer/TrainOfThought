@@ -37,6 +37,7 @@ jobs:
     steps:
       - name: test
         run: |
+          ls
           cd Tests
           ls
           ls bin
