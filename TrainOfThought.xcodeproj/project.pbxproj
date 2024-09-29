@@ -34,7 +34,7 @@
 		076AB0782C9E444200531419 /* ann_dense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ann_dense.h; sourceTree = "<group>"; };
 		076AB07D2C9E4F3C00531419 /* unit_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = unit_tests.cpp; sourceTree = "<group>"; };
 		076AB0812C9E52F000531419 /* build_unit_tests.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_unit_tests.sh; sourceTree = "<group>"; };
-		076AB0832C9ECE0300531419 /* build-ubuntu.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-ubuntu.yml"; path = ".github/workflows/build-ubuntu.yml"; sourceTree = "<group>"; };
+		076AB0832C9ECE0300531419 /* build-and-test-ubuntu.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-and-test-ubuntu.yml"; path = ".github/workflows/build-and-test-ubuntu.yml"; sourceTree = "<group>"; };
 		07B1761929168F820057676B /* libCore.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCore.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -83,7 +83,7 @@
 		076AB0822C9EB0A500531419 /* workflows */ = {
 			isa = PBXGroup;
 			children = (
-				076AB0832C9ECE0300531419 /* build-ubuntu.yml */,
+				076AB0832C9ECE0300531419 /* build-and-test-ubuntu.yml */,
 			);
 			name = workflows;
 			sourceTree = "<group>";
