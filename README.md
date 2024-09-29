@@ -4,7 +4,7 @@ This is a header-only library.
 
 ![GitHub License](https://img.shields.io/github/license/razterizer/TrainOfThought?color=blue)
 
-[![build check ubuntu](https://github.com/razterizer/TrainOfThought/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/razterizer/TrainOfThought/actions/workflows/build-ubuntu.yml)
+[![build and test ubuntu](https://github.com/razterizer/TrainOfThought/actions/workflows/build-and-test-ubuntu.yml/badge.svg)](https://github.com/razterizer/TrainOfThought/actions/workflows/build-and-test-ubuntu.yml)
 
 ## Machine Learning
 
