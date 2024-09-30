@@ -141,10 +141,10 @@ namespace ml
           }
           for (int fr_idx = 0; fr_idx < filter_size[0]; ++fr_idx)
           {
-            size_t ir_idx = or_idx * stride[0] + fr_idx;
-            for (size_t fc_idx = 0; fc_idx < filter_size[1]; ++fc_idx)
+            auto ir_idx = or_idx * stride[0] + fr_idx;
+            for (int fc_idx = 0; fc_idx < filter_size[1]; ++fc_idx)
             {
-              size_t ic_idx = oc_idx * stride[1] + fc_idx;
+              auto ic_idx = oc_idx * stride[1] + fc_idx;
               switch (type)
               {
                 case PoolingType::Min: math::minimize(cell, xx[ir_idx][ic_idx]); break;
