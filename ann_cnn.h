@@ -105,8 +105,8 @@ namespace ml
     std::vector<std::vector<float>> pooling_2d(const std::vector<std::vector<float>>& x, PoolingType type, std::array<int, 2> filter_size, std::array<int, 2> stride, bool use_padding = false)
     {
       auto xx = x;
-      auto Nir = xx.size();
-      auto Nic = xx.back().size();
+      auto Nir = static_cast<int>(xx.size());
+      auto Nic = static_cast<int>(xx.back().size());
       //auto No = (Ni - filter_size + 1)/stride;
       //auto No = (Ni - filter_size + 2*padding)/stride + 1;
       auto Nor = (Nir - filter_size[0])/stride[0] + 1;
@@ -127,9 +127,9 @@ namespace ml
       std::vector<std::vector<float>> ret(Nor);
       for (auto& row : ret)
         row.resize(Noc);
-      for (size_t or_idx = 0; or_idx < Nor; ++or_idx)
+      for (int or_idx = 0; or_idx < Nor; ++or_idx)
       {
-        for (size_t oc_idx = 0; oc_idx < Noc; ++oc_idx)
+        for (int oc_idx = 0; oc_idx < Noc; ++oc_idx)
         {
           float cell = 0.f;
           switch (type)
@@ -139,7 +139,7 @@ namespace ml
             case PoolingType::Sum:
             case PoolingType::Mean: cell = 0; break;
           }
-          for (size_t fr_idx = 0; fr_idx < filter_size[0]; ++fr_idx)
+          for (int fr_idx = 0; fr_idx < filter_size[0]; ++fr_idx)
           {
             size_t ir_idx = or_idx * stride[0] + fr_idx;
             for (size_t fc_idx = 0; fc_idx < filter_size[1]; ++fc_idx)
