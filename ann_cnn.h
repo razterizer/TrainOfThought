@@ -62,7 +62,7 @@ namespace ml
     std::vector<float> pooling_1d(const std::vector<float>& x, PoolingType type, int filter_size, int stride, bool use_padding = false)
     {
       auto xx = x;
-      auto Ni = xx.size();
+      auto Ni = static_cast<int>(xx.size());
       //auto No = (Ni - filter_size + 1)/stride;
       //auto No = (Ni - filter_size + 2*padding)/stride + 1;
       auto No = (Ni - filter_size)/stride + 1;
