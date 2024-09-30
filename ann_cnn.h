@@ -73,7 +73,7 @@ namespace ml
         No++;
       }
       std::vector<float> ret(No);
-      for (size_t o_idx = 0; o_idx < No; ++o_idx)
+      for (int o_idx = 0; o_idx < No; ++o_idx)
       {
         float cell = 0.f;
         switch (type)
@@ -83,9 +83,9 @@ namespace ml
           case PoolingType::Sum:
           case PoolingType::Mean: cell = 0; break;
         }
-        for (size_t f_idx = 0; f_idx < filter_size; ++f_idx)
+        for (int f_idx = 0; f_idx < filter_size; ++f_idx)
         {
-          size_t i_idx = o_idx * stride + f_idx;
+          auto i_idx = o_idx * stride + f_idx;
           switch (type)
           {
             case PoolingType::Min: math::minimize(cell, xx[i_idx]); break;
