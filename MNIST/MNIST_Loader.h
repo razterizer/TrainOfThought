@@ -108,8 +108,8 @@ namespace mnist
       {
         const auto& img_src = dataset.training_images[img_idx];
         auto& img_dst = training_images[img_idx];
-        for (size_t r_idx = 0; r_idx < Nr0; ++r_idx)
-          for (size_t c_idx = 0; c_idx < Nc0; ++c_idx)
+        for (size_t r_idx = 0; r_idx < static_cast<size_t>(Nr0); ++r_idx)
+          for (size_t c_idx = 0; c_idx < static_cast<size_t>(Nc0); ++c_idx)
           {
             auto px_idx = r_idx * Nc0 + c_idx;
             img_dst[r_idx + pad_r][c_idx + pad_c] = img_src[px_idx];
@@ -148,11 +148,11 @@ namespace mnist
         return;
       
       std::cout << "=== MNIST Image " << img_idx << " --- label: " << static_cast<int>(unit.label) << " ===\n";
-      for (size_t r_idx = 0; r_idx < Nr; ++r_idx)
+      for (size_t r_idx = 0; r_idx < static_cast<size_t>(Nr); ++r_idx)
       {
         std::cout << " ";
         if (shaded)
-          for (size_t c_idx = 0; c_idx < Nc; ++c_idx)
+          for (size_t c_idx = 0; c_idx < static_cast<size_t>(Nc); ++c_idx)
           {
             auto px = unit.image[r_idx][c_idx] / 255.f;
             if (px == 0)
@@ -167,7 +167,7 @@ namespace mnist
               std::cout << "#";
           }
         else
-          for (size_t c_idx = 0; c_idx < Nc; ++c_idx)
+          for (size_t c_idx = 0; c_idx < static_cast<size_t>(Nc); ++c_idx)
             std::cout << str::adjust_str(std::to_string(static_cast<int>(unit.image[r_idx][c_idx])), str::Adjustment::Right, 3) << " ";
         std::cout << "\n";
       }
