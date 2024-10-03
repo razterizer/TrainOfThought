@@ -57,7 +57,7 @@ namespace ml
       float update_forward()
       {
         std::vector<float> x, w;
-        for (int i = 0; i < Nw; ++i)
+        for (int i = 0; i < static_cast<int>(Nw); ++i)
         {
           auto ival = inputs[i].get();
           if (ival.has_value())
@@ -215,7 +215,8 @@ namespace ml
       NeuralLayer(const std::vector<std::vector<float>>& w,
                   const std::vector<float>& b,
                   PhiType af_type)
-        : No(w.size()), Ni(w[0].size())
+        : Ni(w[0].size())
+        , No(w.size())
       {
         for (size_t n_idx = 0; n_idx < No; ++n_idx)
           neurons.emplace_back(std::make_unique<Neuron>(w[n_idx], b[n_idx], af_type));
@@ -480,7 +481,7 @@ namespace ml
                  const std::vector<float>& phi_beta,
                  const std::vector<std::vector<float>>& w,
                  const std::vector<float>& b)
-        : No(w.size()), Nh(phi_beta.size()), Ni(c[0].size())
+        : Ni(c[0].size()), Nh(phi_beta.size()), No(w.size())
         , centroids(c), dist_sq(Nh), beta(phi_beta), phi(Nh), weights(w), bias(b)
         , outputs(No)
       {}
