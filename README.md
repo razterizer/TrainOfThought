@@ -7,6 +7,7 @@ This is a header-only library.
 [![build and test ubuntu](https://github.com/razterizer/TrainOfThought/actions/workflows/build-and-test-ubuntu.yml/badge.svg)](https://github.com/razterizer/TrainOfThought/actions/workflows/build-and-test-ubuntu.yml)
 
 ![Top Languages](https://img.shields.io/github/languages/top/razterizer/TrainOfThought)
+![GitHub repo size](https://img.shields.io/github/repo-size/razterizer/TrainOfThought)
 ![Goto](https://img.shields.io/github/search/razterizer/TrainOfThought/goto)
 ![Commit Activity](https://img.shields.io/github/commit-activity/t/razterizer/TrainOfThought)
 ![Last Commit](https://img.shields.io/github/last-commit/razterizer/TrainOfThought?color=blue)
