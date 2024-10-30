@@ -2,6 +2,7 @@
 
 ![GitHub License](https://img.shields.io/github/license/razterizer/TrainOfThought?color=blue)
 ![Static Badge](https://img.shields.io/badge/linkage-header_only-yellow)
+![Static Badge](https://img.shields.io/badge/C%2B%2B-20-yellow)
 
 [![build and test ubuntu](https://github.com/razterizer/TrainOfThought/actions/workflows/build-and-test-ubuntu.yml/badge.svg)](https://github.com/razterizer/TrainOfThought/actions/workflows/build-and-test-ubuntu.yml)
 
