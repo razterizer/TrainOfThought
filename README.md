@@ -9,7 +9,6 @@
 ![Top Languages](https://img.shields.io/github/languages/top/razterizer/TrainOfThought)
 ![GitHub repo size](https://img.shields.io/github/repo-size/razterizer/TrainOfThought)
 ![](https://tokei.rs/b1/github/razterizer/TrainOfThought)
-![Goto](https://img.shields.io/github/search/razterizer/TrainOfThought/goto)
 ![Commit Activity](https://img.shields.io/github/commit-activity/t/razterizer/TrainOfThought)
 ![Last Commit](https://img.shields.io/github/last-commit/razterizer/TrainOfThought?color=blue)
 ![Contributors](https://img.shields.io/github/contributors/razterizer/TrainOfThought?color=blue)
