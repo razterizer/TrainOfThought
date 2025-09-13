@@ -267,7 +267,7 @@ namespace ml
       }
       
       // MNIST
-      
+#if false
       char cwd[PATH_MAX];
          if (getcwd(cwd, sizeof(cwd)) != NULL) {
              printf("Current working dir: %s\n", cwd);
@@ -281,6 +281,7 @@ namespace ml
       mnist.print(mnist::MNIST_Subset::Training, 0, true);
       mnist.print(mnist::MNIST_Subset::Training, 1, true);
       mnist.print(mnist::MNIST_Subset::Training, 2, true);
+#endif
 
       // LeNet5
 
