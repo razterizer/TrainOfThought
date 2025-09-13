@@ -12,11 +12,11 @@
 		076AB0722C9E442F00531419 /* mnist_reader_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 076AB06D2C9E442F00531419 /* mnist_reader_common.h */; };
 		076AB0732C9E442F00531419 /* mnist_reader.h in Headers */ = {isa = PBXBuildFile; fileRef = 076AB06E2C9E442F00531419 /* mnist_reader.h */; };
 		076AB0742C9E442F00531419 /* mnist_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 076AB06F2C9E442F00531419 /* mnist_utils.h */; };
-		076AB0792C9E444200531419 /* LeNet.h in Headers */ = {isa = PBXBuildFile; fileRef = 076AB0752C9E444200531419 /* LeNet.h */; };
-		076AB07A2C9E444200531419 /* ann_cnn.h in Headers */ = {isa = PBXBuildFile; fileRef = 076AB0762C9E444200531419 /* ann_cnn.h */; };
-		076AB07B2C9E444200531419 /* ann_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 076AB0772C9E444200531419 /* ann_utils.h */; };
-		076AB07C2C9E444200531419 /* ann_dense.h in Headers */ = {isa = PBXBuildFile; fileRef = 076AB0782C9E444200531419 /* ann_dense.h */; };
 		076AB07F2C9E4F3C00531419 /* unit_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 076AB07D2C9E4F3C00531419 /* unit_tests.cpp */; };
+		07BDBB6B2E75A0E3002ACC96 /* LeNet.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB692E75A0E3002ACC96 /* LeNet.h */; };
+		07BDBB6C2E75A0E3002ACC96 /* ann_dense.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB672E75A0E3002ACC96 /* ann_dense.h */; };
+		07BDBB6D2E75A0E3002ACC96 /* ann_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB682E75A0E3002ACC96 /* ann_utils.h */; };
+		07BDBB6E2E75A0E3002ACC96 /* ann_cnn.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB662E75A0E3002ACC96 /* ann_cnn.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,14 +28,14 @@
 		076AB06D2C9E442F00531419 /* mnist_reader_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mnist_reader_common.h; sourceTree = "<group>"; };
 		076AB06E2C9E442F00531419 /* mnist_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mnist_reader.h; sourceTree = "<group>"; };
 		076AB06F2C9E442F00531419 /* mnist_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mnist_utils.h; sourceTree = "<group>"; };
-		076AB0752C9E444200531419 /* LeNet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeNet.h; sourceTree = "<group>"; };
-		076AB0762C9E444200531419 /* ann_cnn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ann_cnn.h; sourceTree = "<group>"; };
-		076AB0772C9E444200531419 /* ann_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ann_utils.h; sourceTree = "<group>"; };
-		076AB0782C9E444200531419 /* ann_dense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ann_dense.h; sourceTree = "<group>"; };
 		076AB07D2C9E4F3C00531419 /* unit_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = unit_tests.cpp; sourceTree = "<group>"; };
 		076AB0812C9E52F000531419 /* build_unit_tests.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_unit_tests.sh; sourceTree = "<group>"; };
 		076AB0832C9ECE0300531419 /* build-and-test-ubuntu.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-and-test-ubuntu.yml"; path = ".github/workflows/build-and-test-ubuntu.yml"; sourceTree = "<group>"; };
 		07B1761929168F820057676B /* libCore.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCore.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		07BDBB662E75A0E3002ACC96 /* ann_cnn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ann_cnn.h; sourceTree = "<group>"; };
+		07BDBB672E75A0E3002ACC96 /* ann_dense.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ann_dense.h; sourceTree = "<group>"; };
+		07BDBB682E75A0E3002ACC96 /* ann_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ann_utils.h; sourceTree = "<group>"; };
+		07BDBB692E75A0E3002ACC96 /* LeNet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeNet.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,10 +95,7 @@
 				0760B6EF2B9C8F3B0032CACD /* README.md */,
 				076AB0822C9EB0A500531419 /* workflows */,
 				076AB06A2C9E441A00531419 /* MNIST */,
-				076AB0762C9E444200531419 /* ann_cnn.h */,
-				076AB0782C9E444200531419 /* ann_dense.h */,
-				076AB0772C9E444200531419 /* ann_utils.h */,
-				076AB0752C9E444200531419 /* LeNet.h */,
+				07BDBB6A2E75A0E3002ACC96 /* TrainOfThought */,
 				0723D8262938A15900C567B5 /* Tests */,
 				07B1761A29168F820057676B /* Products */,
 			);
@@ -112,6 +109,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		07BDBB6A2E75A0E3002ACC96 /* TrainOfThought */ = {
+			isa = PBXGroup;
+			children = (
+				07BDBB662E75A0E3002ACC96 /* ann_cnn.h */,
+				07BDBB672E75A0E3002ACC96 /* ann_dense.h */,
+				07BDBB682E75A0E3002ACC96 /* ann_utils.h */,
+				07BDBB692E75A0E3002ACC96 /* LeNet.h */,
+			);
+			name = TrainOfThought;
+			path = include/TrainOfThought;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -122,11 +131,11 @@
 				076AB0722C9E442F00531419 /* mnist_reader_common.h in Headers */,
 				076AB0732C9E442F00531419 /* mnist_reader.h in Headers */,
 				0723D8202938837300C567B5 /* MachineLearning_tests.h in Headers */,
-				076AB07A2C9E444200531419 /* ann_cnn.h in Headers */,
-				076AB0792C9E444200531419 /* LeNet.h in Headers */,
-				076AB07C2C9E444200531419 /* ann_dense.h in Headers */,
+				07BDBB6B2E75A0E3002ACC96 /* LeNet.h in Headers */,
+				07BDBB6C2E75A0E3002ACC96 /* ann_dense.h in Headers */,
+				07BDBB6D2E75A0E3002ACC96 /* ann_utils.h in Headers */,
+				07BDBB6E2E75A0E3002ACC96 /* ann_cnn.h in Headers */,
 				076AB0742C9E442F00531419 /* mnist_utils.h in Headers */,
-				076AB07B2C9E444200531419 /* ann_utils.h in Headers */,
 				076AB0712C9E442F00531419 /* MNIST_Loader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
