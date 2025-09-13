@@ -1,7 +1,9 @@
 #!/bin/bash
 
 
-additional_flags="-I../../Core/include"
+additional_flags="-I.. \
+  -I../include/TrainOfThought \
+  -I../../Core/include"
 
 ../../Core/build.sh unit_tests "$1" "${additional_flags[@]}"
 
