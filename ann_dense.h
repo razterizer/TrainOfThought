@@ -507,7 +507,7 @@ namespace ml
           phi[h_idx] = std::exp(-beta[h_idx]*dist_sq[h_idx]);
         for (size_t o_idx = 0; o_idx < No; ++o_idx)
         {
-          auto o = outputs[o_idx];
+          auto& o = outputs[o_idx];
           o = beta[o_idx];
           const auto& w_o = weights[o_idx];
           for (size_t h_idx = 0; h_idx < Nh; ++h_idx)
