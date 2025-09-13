@@ -6,10 +6,10 @@
 //
 
 #pragma once
-#include "../ann_dense.h"
-#include "../ann_cnn.h"
-#include "../LeNet.h"
-#include "../MNIST/MNIST_Loader.h"
+#include "ann_dense.h"
+#include "ann_cnn.h"
+#include "LeNet.h"
+#include "MNIST/MNIST_Loader.h"
 #include <unistd.h>
 #include <assert.h>
 
@@ -266,8 +266,7 @@ namespace ml
         }));
       }
       
-#if false
-      // LeNet5
+      // MNIST
       
       char cwd[PATH_MAX];
          if (getcwd(cwd, sizeof(cwd)) != NULL) {
@@ -282,6 +281,10 @@ namespace ml
       mnist.print(mnist::MNIST_Subset::Training, 0, true);
       mnist.print(mnist::MNIST_Subset::Training, 1, true);
       mnist.print(mnist::MNIST_Subset::Training, 2, true);
+
+      // LeNet5
+
+#if false
       LeNet5 lenet5;
       auto ex = mnist.get(mnist::MNIST_Subset::Training, 2);
       if (!ex.empty())
