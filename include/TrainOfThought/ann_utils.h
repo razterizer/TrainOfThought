@@ -11,6 +11,7 @@
 #include <Core/StringHelper.h>
 #include <optional>
 #include <memory>
+#define NOMINMAX
 #include <algorithm>
 
 
