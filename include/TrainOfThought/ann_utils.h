@@ -6,7 +6,6 @@
 //
 
 #pragma once
-#define NOMINMAX
 #include <Core/StlUtils.h>
 #include <Core/Rand.h>
 #include <Core/StringHelper.h>
