@@ -11,6 +11,7 @@
 #include <Core/StringHelper.h>
 #include <optional>
 #include <memory>
+#include <algorithm>
 
 
 namespace ml
