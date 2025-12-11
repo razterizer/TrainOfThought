@@ -212,8 +212,8 @@ namespace ml
         
         auto af_p3_2d = activation_2d(p3_2d, PhiType::ReLU);
         assert(math::fuz_eq(af_p3_2d[0][0], 1.5556f, 1e-4f));
-        assert(math::is_eps(af_p3_2d[0][1], 1e-4f));
-        assert(math::is_eps(af_p3_2d[1][0], 1e-4f));
+        assert(math::fuz_zero(af_p3_2d[0][1], 1e-4f));
+        assert(math::fuz_zero(af_p3_2d[1][0], 1e-4f));
         assert(math::fuz_eq(af_p3_2d[1][1], 3.7778f, 1e-4f));
         
         auto k = std::vector<std::vector<float>>
