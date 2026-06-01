@@ -36,6 +36,7 @@
 		07BDBB672E75A0E3002ACC96 /* ann_dense.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ann_dense.h; sourceTree = "<group>"; };
 		07BDBB682E75A0E3002ACC96 /* ann_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ann_utils.h; sourceTree = "<group>"; };
 		07BDBB692E75A0E3002ACC96 /* LeNet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeNet.h; sourceTree = "<group>"; };
+		07C80E1D2FCD07A700106C83 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +98,7 @@
 				076AB06A2C9E441A00531419 /* MNIST */,
 				07BDBB6A2E75A0E3002ACC96 /* TrainOfThought */,
 				0723D8262938A15900C567B5 /* Tests */,
+				07C80E1D2FCD07A700106C83 /* CMakeLists.txt */,
 				07B1761A29168F820057676B /* Products */,
 			);
 			sourceTree = "<group>";
