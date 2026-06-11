@@ -13,6 +13,7 @@
 ![Last Commit](https://img.shields.io/github/last-commit/razterizer/TrainOfThought?color=blue)
 ![Contributors](https://img.shields.io/github/contributors/razterizer/TrainOfThought?color=blue)
 <!-- ![Languages](https://img.shields.io/github/languages/count/razterizer/TrainOfThought) -->
+![Static Badge](https://img.shields.io/badge/ai_usage-none-lightblue)
 
 This is a cross-platform, header-only library for machine learning and AI.
 
